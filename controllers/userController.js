@@ -52,17 +52,15 @@ class UserController {
       return next(ApiError.internal("Указан неверный пароль", res));
     }
     const token = generateJwt(user.id, user.fullName, user.tel, user.role);
-    return res
-      .status(200)
-      .json({
-        token,
-        user: {
-          id: user.id,
-          fullName: user.fullName,
-          tel: user.tel,
-          role: user.role,
-        },
-      });
+    return res.status(200).json({
+      token,
+      user: {
+        id: user.id,
+        fullName: user.fullName,
+        tel: user.tel,
+        role: user.role,
+      },
+    });
   }
 
   async check(req, res, next) {
@@ -72,24 +70,40 @@ class UserController {
       tel: req.user.tel,
       role: req.user.role,
     };
-    // const token = generateJwt(
-    //   req.user.id,
-    //   req.user.fullName,
-    //   req.user.tel,
-    //   req.user.role
-    // );
     return res.status(200).json(user);
   }
 
-  // async check(req, res, next) {
-  //   const token = generateJwt(
-  //     req.user.id,
-  //     req.user.fullName,
-  //     req.user.tel,
-  //     req.user.role
-  //   );
-  //   return res.status(200).json({ token });
-  // }
+  async editMySelf(req, res, next) {
+    try {
+      console.log(
+        "****\n*****\n****\nuser",
+        req.user,
+        "\n****\n****\nbody",
+        req.body
+      );
+      await User.update(
+        { fullName: req.body.fullName },
+        // req.body,
+        { where: { id: req.user.id } }
+      )
+        .then((result) => {
+          console.log(result);
+          res.status(200).json({ message: "ok" });
+        })
+        .catch((err) => {
+          console.log("!!!!!!\n!!!!\n", err, "\n&&&&&&\n&&&&&&&&");
+          res.status(500).json({ message: "Server error" });
+        });
+        
+    } catch (error) {
+      console.log(
+        "++++++++++++\n========\n========\n======\n",
+        error,
+        "\n---------\n------\n------"
+      );
+      return next(ApiError.internal("EROR dfdff", res));
+    }
+  }
 }
 
 module.exports = new UserController();
