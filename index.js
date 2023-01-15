@@ -1,13 +1,31 @@
-const express = require('express');
-require('dotenv');
+require("dotenv").config();
+const express = require("express");
 
-const port = process.env.PORT || 4400
+
+const sequelize = require("./settings/db");
+const router = require('./routes/index');
+const corsMiddleware = require("./middleware/corsMiddleware");
+
+const port = process.env.PORT || 4400;
 const app = express();
 
-app.get('/', (req, res)=> {
-  res.send("Hello world!")
-})
 
-app.listen(port, ()=>{
-  console.log("Server working on port: ", port)
-})
+app.use(corsMiddleware);
+app.use(express.json())
+app.use('/api', router)
+
+app.get("/", (req, res) => {
+  res.send("Hello world!");
+});
+
+const start = async () => {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    app.listen(port, () => console.log(`Server started on port ${port}`));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+start();
