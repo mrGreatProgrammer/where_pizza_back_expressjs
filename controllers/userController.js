@@ -45,11 +45,11 @@ class UserController {
     const { tel, password } = req.body;
     const user = await User.findOne({ where: { tel } });
     if (!user) {
-      return next(ApiError.internal("Пользователь не найден", res));
+      return next(ApiError.badRequest("Пользователь не найден", res));
     }
     let comparePassword = bcrypt.compareSync(password, user.password);
     if (!comparePassword) {
-      return next(ApiError.internal("Указан неверный пароль", res));
+      return next(ApiError.forbidden("Указан неверный пароль", res));
     }
     const token = generateJwt(user.id, user.fullName, user.tel, user.role);
     return res.status(200).json({
@@ -75,14 +75,9 @@ class UserController {
 
   async editMySelf(req, res, next) {
     try {
-      console.log(
-        "****\n*****\n****\nuser",
-        req.user,
-        "\n****\n****\nbody",
-        req.body
-      );
+      const { fullName, tel, email, birthDate, address } = req.body;
       await User.update(
-        { fullName: req.body.fullName },
+        { fullName, tel, email, birthDate, address },
         // req.body,
         { where: { id: req.user.id } }
       )
@@ -94,7 +89,6 @@ class UserController {
           console.log("!!!!!!\n!!!!\n", err, "\n&&&&&&\n&&&&&&&&");
           res.status(500).json({ message: "Server error" });
         });
-        
     } catch (error) {
       console.log(
         "++++++++++++\n========\n========\n======\n",

@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const path = require("path");
 
 
 const sequelize = require("./settings/db");
@@ -10,8 +11,11 @@ const port = process.env.PORT || 4400;
 const app = express();
 
 
+
 app.use(corsMiddleware);
 app.use(express.json())
+// app.use(express.static(path.resolve(__dirname, "static")));
+app.use('/static', express.static('static'))
 app.use('/api', router)
 
 app.get("/", (req, res) => {

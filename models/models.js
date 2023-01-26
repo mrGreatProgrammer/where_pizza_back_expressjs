@@ -26,8 +26,8 @@ const Product = sequelize.define("product", {
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
   price: { type: DataTypes.INTEGER, allowNull: false },
   discount: { type: DataTypes.INTEGER, allowNull: true },
-  img: { type: DataTypes.STRING, allowNull: false },
-  about: { type: DataTypes.STRING, allowNull: false },
+  about: { type: DataTypes.STRING, allowNull: true },
+  img: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: true },
 });
 
 User.hasOne(Basket);
