@@ -30,6 +30,15 @@ const Product = sequelize.define("product", {
   img: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: true },
 });
 
+const Order = sequelize.define('order', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  totalPrice: {type: DataTypes.INTEGER, allowNull: false},
+  totalCount: {type: DataTypes.INTEGER, allowNull: false},
+  orderStatus: {type: DataTypes.STRING, allowNull: true},
+  payedStatus: {type: DataTypes.STRING, allowNull: true},
+  orderedProducts: {type: DataTypes.TEXT, allowNull: false}
+})
+
 User.hasOne(Basket);
 Basket.belongsTo(User);
 
@@ -39,9 +48,13 @@ BasketProduct.belongsTo(Basket);
 Product.hasMany(BasketProduct);
 BasketProduct.belongsTo(Product);
 
+User.hasMany(Order);
+Order.belongsTo(User);
+
 module.exports = {
   User,
   Basket,
   BasketProduct,
   Product,
+  Order
 };

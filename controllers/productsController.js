@@ -1,13 +1,6 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const { Product } = require("../models/models");
 const ApiError = require("../error/ApiError");
 
-const generateJwt = (id, fullName, tel, role) => {
-  return jwt.sign({ id, fullName, tel, role }, process.env.SECRET_KEY, {
-    expiresIn: "24h",
-  });
-};
 
 class ProductsController {
   async addProduct(req, res, next) {
