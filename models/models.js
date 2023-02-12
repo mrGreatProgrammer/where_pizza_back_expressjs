@@ -9,8 +9,8 @@ const User = sequelize.define("user", {
   email: { type: DataTypes.STRING, allowNull: true },
   password: { type: DataTypes.STRING, allowNull: false },
   role: { type: DataTypes.STRING, defaultValue: "USER" },
-  birthDate: {type: DataTypes.DATEONLY, allowNull: true},
-  address: {type: DataTypes.STRING, allowNull: true}
+  birthDate: { type: DataTypes.DATEONLY, allowNull: true },
+  address: { type: DataTypes.STRING, allowNull: true },
 });
 
 const Basket = sequelize.define("basket", {
@@ -21,6 +21,17 @@ const BasketProduct = sequelize.define("basket_product", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 });
 
+const ProductsGroup = sequelize.define("products_group", {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  title: { type: DataTypes.STRING, unique: true, allowNull: false },
+});
+
+const ProductReciep = sequelize.define('product_reciep',{
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  name: { type: DataTypes.STRING, unique: true, allowNull: false },
+  price: {type: DataTypes.INTEGER, allowNull:true},
+})
+
 const Product = sequelize.define("product", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
@@ -30,14 +41,14 @@ const Product = sequelize.define("product", {
   img: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: true },
 });
 
-const Order = sequelize.define('order', {
+const Order = sequelize.define("order", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  totalPrice: {type: DataTypes.INTEGER, allowNull: false},
-  totalCount: {type: DataTypes.INTEGER, allowNull: false},
-  orderStatus: {type: DataTypes.STRING, allowNull: true},
-  payedStatus: {type: DataTypes.STRING, allowNull: true},
-  orderedProducts: {type: DataTypes.TEXT, allowNull: false}
-})
+  totalPrice: { type: DataTypes.INTEGER, allowNull: false },
+  totalCount: { type: DataTypes.INTEGER, allowNull: false },
+  orderStatus: { type: DataTypes.STRING, allowNull: true },
+  payedStatus: { type: DataTypes.STRING, allowNull: true },
+  orderedProducts: { type: DataTypes.TEXT, allowNull: false },
+});
 
 User.hasOne(Basket);
 Basket.belongsTo(User);
@@ -48,6 +59,15 @@ BasketProduct.belongsTo(Basket);
 Product.hasMany(BasketProduct);
 BasketProduct.belongsTo(Product);
 
+ProductsGroup.hasMany(Product);
+Product.belongsTo(ProductsGroup);
+
+// Product.hasMany(ProductsGroup);
+// ProductsGroup.belongsTo(Product);
+
+Product.hasMany(ProductReciep);
+ProductReciep.belongsTo(Product);
+
 User.hasMany(Order);
 Order.belongsTo(User);
 
@@ -56,5 +76,7 @@ module.exports = {
   Basket,
   BasketProduct,
   Product,
-  Order
+  ProductsGroup,
+  ProductReciep,
+  Order,
 };

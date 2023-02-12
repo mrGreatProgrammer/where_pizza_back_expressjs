@@ -34,8 +34,9 @@ var upload = multer({
   },
 });
 
-
+router.post("/group_of_products", productsController.addGroupOfProducts);
 router.get("/all", productsController.getAll);
+router.get("/group_of_products", productsController.getGroupOfProducts);
 router.post(
   "/",
   authMiddleware,
