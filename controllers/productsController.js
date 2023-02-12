@@ -3,7 +3,8 @@ const ApiError = require("../error/ApiError");
 
 class ProductsController {
   async addProduct(req, res, next) {
-    const { name, price, discount, img, about } = req.body;
+    const { name, price, discount, img, about, productReciepId, productsGroupId } =
+      req.body;
 
     let filesName = [];
     for (var i = 0; i < req.files.length; i++) {
@@ -15,6 +16,9 @@ class ProductsController {
       img: filesName,
       discount,
       about,
+      productReciepId,
+      // products_group: productsGroupId,
+      productsGroupId,
     });
 
     return res.status(200).json({
@@ -28,30 +32,36 @@ class ProductsController {
     page = page || 1;
     limit = limit || 8;
     let offset = page * limit - limit;
-    let products;
-    if (!brandId && !typeId) {
-      products = await Product.findAndCountAll({ limit, offset });
+    try {
+      
+      let products;
+      if (!brandId && !typeId) {
+      products = await Product.findAndCountAll({ limit, offset, include: [{model:ProductReciep, as:"product_recieps"}] });
     }
     // if (brandId && !typeId) {
-    //     products = await Product.findAndCountAll({where:{brandId}, limit, offset})
-    // }
-    // if (!brandId && typeId) {
-    //     products = await Product.findAndCountAll({where:{typeId}, limit, offset})
-    // }
-    // if (brandId && typeId) {
+      //     products = await Product.findAndCountAll({where:{brandId}, limit, offset})
+      // }
+      // if (!brandId && typeId) {
+        //     products = await Product.findAndCountAll({where:{typeId}, limit, offset})
+        // }
+        // if (brandId && typeId) {
     //     products = await Device.findAndCountAll({where:{typeId, brandId}, limit, offset})
     // }
     return res.status(200).json(products);
+  } catch (error) {
+    console.log("get all product err:---->", error);
+    return res.status(500).json({message: "server err"});
   }
-
+  }
+  
   async addGroupOfProducts(req, res) {
     let { title } = req.body;
     try {
       const productsGroup = await ProductsGroup.create({
         title,
       });
-
-      return res.status(200).json({ message: "success" });
+      
+      return res.status(200).json({ message: "success", productsGroup });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message: "server err" });
@@ -66,13 +76,44 @@ class ProductsController {
       // let products;
 
       let groupOfproducts = await ProductsGroup.findAll();
-      let products = await Product.findAndCountAll({
-        limit,
-        offset,
-        where: { products_groupId: groupOfproducts.map((e) => e.id) },
-      });
+      // let products = await Product.findAndCountAll({
+      //   limit,
+      //   offset,
+      //   where: { products_groupId: groupOfproducts.map((e) => e.id) },
+      // });
 
-      return res.status(200).json(products);
+      return res.status(200).json(groupOfproducts);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "server err" });
+    }
+  }
+
+  async getProductsByGroup(req, res) {
+    let { limit = 8, page = 1 } = req.query;
+
+    try {
+      let offset = page * limit - limit;
+      // let products;
+
+      let groupOfproducts = await ProductsGroup.findAll({
+        include: [
+          {
+            model: Product,
+            as: "products",
+            limit: 3,
+            // include: [{ model: ProductReciep, as: "ingredients" }],
+          },
+        ],
+        limit: 2,
+      });
+      // let products = await Product.findAndCountAll({
+      //   limit,
+      //   offset,
+      //   where: { products_groupId: groupOfproducts.map((e) => e.id) },
+      // });
+
+      return res.status(200).json(groupOfproducts);
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message: "server err" });
@@ -95,7 +136,7 @@ class ProductsController {
   }
 
   async getAllReciep(req, res) {
-    let {} = req.query;
+    // let {} = req.query;
     try {
       let recieps = await ProductReciep.findAll();
 

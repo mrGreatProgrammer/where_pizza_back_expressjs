@@ -26,11 +26,11 @@ const ProductsGroup = sequelize.define("products_group", {
   title: { type: DataTypes.STRING, unique: true, allowNull: false },
 });
 
-const ProductReciep = sequelize.define('product_reciep',{
+const ProductReciep = sequelize.define("product_reciep", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
-  price: {type: DataTypes.INTEGER, allowNull:true},
-})
+  price: { type: DataTypes.INTEGER, allowNull: true },
+});
 
 const Product = sequelize.define("product", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -50,6 +50,10 @@ const Order = sequelize.define("order", {
   orderedProducts: { type: DataTypes.TEXT, allowNull: false },
 });
 
+const TypeBrand = sequelize.define("type_brand", {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+});
+
 User.hasOne(Basket);
 Basket.belongsTo(User);
 
@@ -59,14 +63,20 @@ BasketProduct.belongsTo(Basket);
 Product.hasMany(BasketProduct);
 BasketProduct.belongsTo(Product);
 
-ProductsGroup.hasMany(Product);
+ProductsGroup.hasMany(Product, { as: "products" });
 Product.belongsTo(ProductsGroup);
 
 // Product.hasMany(ProductsGroup);
 // ProductsGroup.belongsTo(Product);
 
-Product.hasMany(ProductReciep);
-ProductReciep.belongsTo(Product);
+// Product.hasMany(ProductReciep, { as: "productReciep" });
+// ProductReciep.belongsTo(Product);
+
+ProductReciep.hasMany(Product, {as: "product_recieps"});
+// Product.belongsTo(ProductReciep);
+Product.belongsToMany(ProductReciep, { through: "ingredient" });
+
+// ProductReciep.belongsToMany(Product, { through: TypeBrand });
 
 User.hasMany(Order);
 Order.belongsTo(User);
@@ -79,4 +89,5 @@ module.exports = {
   ProductsGroup,
   ProductReciep,
   Order,
+  TypeBrand
 };
