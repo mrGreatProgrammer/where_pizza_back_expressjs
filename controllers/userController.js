@@ -98,6 +98,23 @@ class UserController {
       return next(ApiError.internal("EROR dfdff", res));
     }
   }
+
+  async getAll(req, res) {
+    let { limit, page } = req.query;
+    page = page || 1;
+    limit = limit || 8;
+    let offset = page * limit - limit;
+    try {
+        let users = await User.findAndCountAll({
+          limit,
+          offset,
+        });
+      return res.status(200).json(users);
+    } catch (error) {
+      console.log("get all users err:---->", error);
+      return res.status(500).json({ message: "server err" });
+    }
+  }
 }
 
 module.exports = new UserController();

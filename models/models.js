@@ -26,7 +26,7 @@ const ProductsGroup = sequelize.define("products_group", {
   title: { type: DataTypes.STRING, unique: true, allowNull: false },
 });
 
-const ProductReciep = sequelize.define("product_reciep", {
+const Ingredient = sequelize.define("ingredient", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
   price: { type: DataTypes.INTEGER, allowNull: true },
@@ -43,14 +43,19 @@ const Product = sequelize.define("product", {
 
 const Order = sequelize.define("order", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  userName: {type: DataTypes.STRING, allowNull: false},
+  userTelNum: {type: DataTypes.STRING, allowNull: false},
+  userEmail: {type: DataTypes.STRING, allowNull: true},
+  
   totalPrice: { type: DataTypes.INTEGER, allowNull: false },
   totalCount: { type: DataTypes.INTEGER, allowNull: false },
   orderStatus: { type: DataTypes.STRING, allowNull: true },
   payedStatus: { type: DataTypes.STRING, allowNull: true },
-  orderedProducts: { type: DataTypes.TEXT, allowNull: false },
+  orderedProducts: { type: DataTypes.JSON, allowNull: false },
+
 });
 
-const TypeBrand = sequelize.define("type_brand", {
+const Product_Ingregient = sequelize.define("Product_Ingregient", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 });
 
@@ -72,9 +77,16 @@ Product.belongsTo(ProductsGroup);
 // Product.hasMany(ProductReciep, { as: "productReciep" });
 // ProductReciep.belongsTo(Product);
 
-ProductReciep.hasMany(Product, {as: "product_recieps"});
+// ProductReciep.hasMany(Product, {as: "product_recieps"});
 // Product.belongsTo(ProductReciep);
-Product.belongsToMany(ProductReciep, { through: "ingredient" });
+Product.belongsToMany(Ingredient, { through: Product_Ingregient
+//    as: "ingredients",
+// foreignKey: "productIngredient_id"
+ });
+Ingredient.belongsToMany(Product, { through: Product_Ingregient
+//   , as: "products",
+// foreignKey: "product_id"
+ });
 
 // ProductReciep.belongsToMany(Product, { through: TypeBrand });
 
@@ -87,7 +99,7 @@ module.exports = {
   BasketProduct,
   Product,
   ProductsGroup,
-  ProductReciep,
+  Ingredient,
   Order,
-  TypeBrand
+  Product_Ingregient
 };
