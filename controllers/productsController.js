@@ -4,14 +4,8 @@ const ApiError = require("../error/ApiError");
 class ProductsController {
   async addProduct(req, res, next) {
     try {
-      const {
-        name,
-        price,
-        discount,
-        about,
-        ingredients,
-        productsGroupId,
-      } = req.body;
+      const { name, price, discount, about, ingredients, productsGroupId } =
+        req.body;
 
       let filesName = [];
       for (var i = 0; i < req.files.length; i++) {
@@ -25,15 +19,15 @@ class ProductsController {
         about,
         productsGroupId,
       });
-      const ingreds = ingredients.split(",").map(e=>Number(e))
+      const ingreds = ingredients.split(",").map((e) => Number(e));
       console.log(ingreds);
-    //  const ingredient1 = await Ingredient.create({name:"ing 14",
-    //   price: 5,});
-    //  const ingredient2 = await Ingredient.create({name:"ing 24",
-    //   price: 15,});
-    const ings = await Ingredient.findAll({where: {id: ingreds}});
+      //  const ingredient1 = await Ingredient.create({name:"ing 14",
+      //   price: 5,});
+      //  const ingredient2 = await Ingredient.create({name:"ing 24",
+      //   price: 15,});
+      const ings = await Ingredient.findAll({ where: { id: ingreds } });
 
-    //   console.log("\n=====\n",ings, "\n--------\n------\n");
+      //   console.log("\n=====\n",ings, "\n--------\n------\n");
 
       await product.addIngredients(ings);
       // await product.setIngredients(productReciepId);
@@ -56,11 +50,11 @@ class ProductsController {
     let offset = page * limit - limit;
     try {
       let products;
-        products = await Product.findAndCountAll({
-          limit,
-          offset,
-          include: [{ model: Ingredient, as: "ingredients" }],
-        });
+      products = await Product.findAndCountAll({
+        limit,
+        offset,
+        include: [{ model: Ingredient, as: "ingredients" }],
+      });
       return res.status(200).json(products);
     } catch (error) {
       console.log("get all product err:---->", error);
@@ -140,13 +134,25 @@ class ProductsController {
   async getAllReciep(req, res) {
     // let {} = req.query;
     try {
-      let recieps = await Ingredient.findAll(
+      let recieps = await Ingredient
+        .findAll
         // {include: [{model: Product, as: 'products'}]}
-        );
+        ();
 
       return res.status(200).json(recieps);
     } catch (error) {
       console.log(error);
+      return res.status(500).json({ message: "server err" });
+    }
+  }
+
+  async deleteProduct(req, res) {
+    try {
+      const { id } = req.query;
+      await Product.destroy({ where: { id: id } });
+
+      return res.status(200).json({ message: "success" });
+    } catch (error) {
       return res.status(500).json({ message: "server err" });
     }
   }
