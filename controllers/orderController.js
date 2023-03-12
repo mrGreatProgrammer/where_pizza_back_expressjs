@@ -3,13 +3,51 @@ const ApiError = require("../error/ApiError");
 
 class OrderController {
   async addOrder(req, res, next) {
-    const { totalPrice, totalCount, products } = req.body;
+    const {
+      totalPrice,
+      totalCount,
+      products,
+      userFullName,
+      phoneNumber,
+      email,
+      deliveryMode,
+      street,
+      house,
+      proch,
+      floor,
+      apartment,
+      intercom,
+      restaurant,
+      fastPrepareTheOrder,
+      timePrepareTheOrder,
+      paymentType,
+      withChange,
+      withChangeNum,
+      userComments,
+    } = req.body;
 
     const order = await Order.create({
       userId: req.user.id,
       totalPrice,
       totalCount,
       orderedProducts: products,
+      userFullName,
+      phoneNumber,
+      email,
+      deliveryMode,
+      street,
+      house,
+      proch,
+      floor,
+      apartment,
+      intercom,
+      restaurant,
+      fastPrepareTheOrder,
+      timePrepareTheOrder,
+      paymentType,
+      withChange,
+      withChangeNum,
+      userComments,
     });
 
     return res.status(200).json({
@@ -18,13 +56,15 @@ class OrderController {
     });
   }
 
-  async editOrder(req, res, next){
-    const {id, userId, orderStatus, payedStatus} = req.body;
+  async editOrder(req, res, next) {
+    const { id, userId, orderStatus, payedStatus } = req.body;
 
+    const order = await Order.update(
+      { orderStatus, payedStatus },
+      { where: { id, userId } }
+    );
 
-    const order = await Order.update({orderStatus, payedStatus}, {where: {id, userId}});
-
-    return res.status(200).json({message: 'success'})
+    return res.status(200).json({ message: "success" });
   }
 
   async getAll(req, res) {
@@ -45,6 +85,22 @@ class OrderController {
     }
 
     return res.json(orders);
+  }
+  async getAllForAdmin(req, res) {
+    let { brandId, typeId, limit, page } = req.query;
+
+    page = page || 1;
+    limit = limit || 4;
+    let offset = page * limit - limit;
+    let orders;
+    if (!brandId && !typeId) {
+      orders = await Order.findAndCountAll({
+        limit,
+        offset,
+      });
+    }
+
+    return res.status(200).json(orders);
   }
 }
 

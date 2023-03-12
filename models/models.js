@@ -28,6 +28,7 @@ const ProductsGroup = sequelize.define("products_group", {
 
 const Ingredient = sequelize.define("ingredient", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  img: { type: DataTypes.TEXT, allowNull: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
   price: { type: DataTypes.INTEGER, allowNull: true },
 });
@@ -43,16 +44,32 @@ const Product = sequelize.define("product", {
 
 const Order = sequelize.define("order", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  userName: {type: DataTypes.STRING, allowNull: false},
-  userTelNum: {type: DataTypes.STRING, allowNull: false},
-  userEmail: {type: DataTypes.STRING, allowNull: true},
-  
+  userFullName: { type: DataTypes.STRING, allowNull: false },
+  phoneNum: { type: DataTypes.STRING, allowNull: false },
+  email: { type: DataTypes.STRING, allowNull: true },
+
   totalPrice: { type: DataTypes.INTEGER, allowNull: false },
   totalCount: { type: DataTypes.INTEGER, allowNull: false },
   orderStatus: { type: DataTypes.STRING, allowNull: true },
   payedStatus: { type: DataTypes.STRING, allowNull: true },
-  orderedProducts: { type: DataTypes.JSON, allowNull: false },
+  orderedProducts: { type: DataTypes.TEXT, allowNull: false },
+  deliveryMode: { type: DataTypes.BOOLEAN },
+  street: { type: DataTypes.STRING, allowNull: true },
+  house: { type: DataTypes.STRING, allowNull: true },
+  proch: { type: DataTypes.STRING, allowNull: true },
+  floor: { type: DataTypes.STRING, allowNull: true },
+  apartment: { type: DataTypes.STRING, allowNull: true },
+  intercom: { type: DataTypes.STRING, allowNull: true },
+  restaurant: { type: DataTypes.STRING, allowNull: true },
 
+  fastPrepareTheOrder: { type: DataTypes.BOOLEAN },
+  timePrepareTheOrder: { type: DataTypes.STRING, allowNull: true },
+  paymentType: { type: DataTypes.INTEGER, allowNull: true },
+
+  withChange: { type: DataTypes.BOOLEAN },
+  withChangeNum: { type: DataTypes.STRING, allowNull: true },
+
+  userComments: { type: DataTypes.TEXT, allowNull: true },
 });
 
 const Product_Ingregient = sequelize.define("Product_Ingregient", {
@@ -79,14 +96,16 @@ Product.belongsTo(ProductsGroup);
 
 // ProductReciep.hasMany(Product, {as: "product_recieps"});
 // Product.belongsTo(ProductReciep);
-Product.belongsToMany(Ingredient, { through: Product_Ingregient
-//    as: "ingredients",
-// foreignKey: "productIngredient_id"
- });
-Ingredient.belongsToMany(Product, { through: Product_Ingregient
-//   , as: "products",
-// foreignKey: "product_id"
- });
+Product.belongsToMany(Ingredient, {
+  through: Product_Ingregient,
+  //    as: "ingredients",
+  // foreignKey: "productIngredient_id"
+});
+Ingredient.belongsToMany(Product, {
+  through: Product_Ingregient,
+  //   , as: "products",
+  // foreignKey: "product_id"
+});
 
 // ProductReciep.belongsToMany(Product, { through: TypeBrand });
 
@@ -101,5 +120,5 @@ module.exports = {
   ProductsGroup,
   Ingredient,
   Order,
-  Product_Ingregient
+  Product_Ingregient,
 };
