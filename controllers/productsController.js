@@ -53,6 +53,7 @@ class ProductsController {
       products = await Product.findAndCountAll({
         limit,
         offset,
+        // include: [{ model: Ingredient, as: "Product_Ingregient" }],
         include: [{ model: Ingredient, as: "ingredients" }],
       });
       return res.status(200).json(products);
@@ -103,6 +104,7 @@ class ProductsController {
             model: Product,
             as: "products",
             limit: 8,
+            // include: [{ model: Ingredient, as: "Product_Ingregient" }],
             include: [{ model: Ingredient, as: "ingredients" }],
           },
         ],

@@ -52,7 +52,7 @@ const Order = sequelize.define("order", {
   totalCount: { type: DataTypes.INTEGER, allowNull: false },
   orderStatus: { type: DataTypes.STRING, allowNull: true },
   payedStatus: { type: DataTypes.STRING, allowNull: true },
-  orderedProducts: { type: DataTypes.TEXT, allowNull: false },
+  orderedProducts: { type: DataTypes.JSON, allowNull: false },
   deliveryMode: { type: DataTypes.BOOLEAN },
   street: { type: DataTypes.STRING, allowNull: true },
   house: { type: DataTypes.STRING, allowNull: true },

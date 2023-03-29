@@ -26,34 +26,83 @@ class OrderController {
       userComments,
     } = req.body;
 
-    const order = await Order.create({
-      userId: req.user.id,
-      totalPrice,
-      totalCount,
-      orderedProducts: products,
-      userFullName,
-      phoneNumber,
-      email,
-      deliveryMode,
-      street,
-      house,
-      proch,
-      floor,
-      apartment,
-      intercom,
-      restaurant,
-      fastPrepareTheOrder,
-      timePrepareTheOrder,
-      paymentType,
-      withChange,
-      withChangeNum,
-      userComments,
-    });
-
-    return res.status(200).json({
-      message: "success",
-      order,
-    });
+    try {
+      
+      
+      const order = await Order.create({
+        userId: req.user.id,
+        totalPrice,
+        totalCount,
+        orderedProducts: products,
+        userFullName,
+        phoneNum: phoneNumber,
+        email,
+        deliveryMode,
+        street,
+        house,
+        proch,
+        floor,
+        apartment,
+        intercom,
+        restaurant,
+        fastPrepareTheOrder,
+        timePrepareTheOrder,
+        paymentType,
+        withChange,
+        withChangeNum,
+        userComments,
+      });
+      
+      console.log("*****\n*****\n*****\n*****\n*****\n*****\n*****\n", {userId: req.user.id,
+        totalPrice,
+        totalCount,
+        orderedProducts: products,
+        userFullName,
+        phoneNum: phoneNumber,
+        email,
+        deliveryMode,
+        street,
+        house,
+        proch,
+        floor,
+        apartment,
+        intercom,
+        restaurant,
+        fastPrepareTheOrder,
+        timePrepareTheOrder,
+        paymentType,
+        withChange,
+        withChangeNum,
+        userComments,})
+      return res.status(200).json({
+        message: "success",
+        order,
+      });
+    } catch (error) {
+      // console.log("*****\n*****\n*****\n*****\n*****\n*****\n*****\n", {userId: req.user.id,
+      //   totalPrice,
+      //   totalCount,
+      //   orderedProducts: products,
+      //   userFullName,
+      //   phoneNum: phoneNumber,
+      //   email,
+      //   deliveryMode,
+      //   street,
+      //   house,
+      //   proch,
+      //   floor,
+      //   apartment,
+      //   intercom,
+      //   restaurant,
+      //   fastPrepareTheOrder,
+      //   timePrepareTheOrder,
+      //   paymentType,
+      //   withChange,
+      //   withChangeNum,
+      //   userComments,})
+      console.log("----->", error)
+      return res.status(500).json({message: "err"})
+    }
   }
 
   async editOrder(req, res, next) {
