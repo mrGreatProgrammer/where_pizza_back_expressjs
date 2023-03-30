@@ -1,9 +1,9 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize('where_pizza', 'root', 'goodfine', {
-  host: 'localhost',
-  dialect: 'mysql', /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */
-  port: 3306
+const sequelize = new Sequelize("where_pizza", "root", "goodfine", {
+  host: process.env.DB_HOST,
+  dialect: "mysql" /* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */,
+  port: process.env.DB_PORT,
 });
 
 // try {
