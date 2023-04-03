@@ -75,6 +75,12 @@ const Order = sequelize.define("order", {
 const Product_Ingregient = sequelize.define("Product_Ingregient", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 });
+const Restaurant = sequelize.define("Restaunrant", {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  title: { type: DataTypes.STRING },
+  lat: { type: DataTypes.STRING },
+  lang: { type: DataTypes.STRING },
+});
 
 User.hasOne(Basket);
 Basket.belongsTo(User);
@@ -121,4 +127,5 @@ module.exports = {
   Ingredient,
   Order,
   Product_Ingregient,
+  Restaurant
 };

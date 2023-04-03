@@ -80,16 +80,26 @@ class UserController {
         { fullName, tel, email, birthDate, address },
         // req.body,
         { where: { id: req.user.id } }
-      )
+        )
         .then((result) => {
           console.log(result);
-          res.status(200).json({ message: "ok" });
         })
         .catch((err) => {
           console.log("!!!!!!\n!!!!\n", err, "\n&&&&&&\n&&&&&&&&");
           res.status(500).json({ message: "Server error" });
         });
-    } catch (error) {
+        const user = await User.findOne({where: {id: req.user.id}})
+        // return res.status(200).json(user);
+        return res.status(200).json({ message: "ok", user: {
+          id: user.id,
+          fullName: user.fullName,
+          role: user.role,
+          tel: user.tel,
+          address: user.address,
+          email: user.email,
+          birthDate: user.birthDate
+        } });
+      } catch (error) {
       console.log(
         "++++++++++++\n========\n========\n======\n",
         error,
