@@ -11,6 +11,7 @@ class UserController {
 
       return res.status(200).json({ message: "done", restaurant });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ message: "err" });
     }
   }
@@ -20,7 +21,8 @@ class UserController {
 
       return res.status(200).json(restaurants);
     } catch (error) {
-      return res.status(500).json({ message: "err" });
+      console.log(error);
+      return res.status(500).json({ message: "err" })
     }
   }
 }

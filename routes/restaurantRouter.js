@@ -6,8 +6,8 @@ const checkRoleMiddleware = require("../middleware/checkRoleMiddleware");
 
 // router.get("/all", authMiddleware, orderController.getAll);
 // router.post("/", authMiddleware, orderController.addOrder);
-router.post("/", authMiddleware, checkRoleMiddleware("ADMIN"), restaurantController.createRestaurant);
-router.get("/", authMiddleware, 
+router.post("/c", authMiddleware, checkRoleMiddleware("ADMIN"), restaurantController.createRestaurant);
+router.get("/g", authMiddleware, 
 // checkRoleMiddleware("ADMIN"),
  restaurantController.getRestaurants);
 

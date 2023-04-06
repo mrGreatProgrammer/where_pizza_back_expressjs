@@ -75,11 +75,12 @@ const Order = sequelize.define("order", {
 const Product_Ingregient = sequelize.define("Product_Ingregient", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 });
-const Restaurant = sequelize.define("Restaunrant", {
+const Restaurant = sequelize.define("Restaurant", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   title: { type: DataTypes.STRING },
-  lat: { type: DataTypes.STRING },
-  lang: { type: DataTypes.STRING },
+  // location: {type: DataTypes.STRING}
+  lat: { type: DataTypes.FLOAT },
+  lang: { type: DataTypes.FLOAT },
 });
 
 User.hasOne(Basket);
