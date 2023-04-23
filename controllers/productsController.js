@@ -119,9 +119,15 @@ class ProductsController {
   }
 
   async addProductReciep(req, res) {
-    let { name, price } = req.body;
+    let { name, price, img } = req.body;
     try {
+      let filesName = [];
+      for (var i = 0; i < req.files.length; i++) {
+        filesName.push("/static/" + req.files[i].filename);
+      }
+
       const reciep = await Ingredient.create({
+        img: filesName,
         name,
         price,
       });

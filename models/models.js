@@ -28,7 +28,7 @@ const ProductsGroup = sequelize.define("products_group", {
 
 const Ingredient = sequelize.define("ingredient", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  img: { type: DataTypes.TEXT, allowNull: true },
+  img: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
   price: { type: DataTypes.INTEGER, allowNull: true },
 });
@@ -128,5 +128,5 @@ module.exports = {
   Ingredient,
   Order,
   Product_Ingregient,
-  Restaurant
+  Restaurant,
 };

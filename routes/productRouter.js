@@ -37,7 +37,7 @@ var upload = multer({
 router.post("/group_of_products", productsController.addGroupOfProducts);
 router.get("/group_of_products", productsController.getGroupOfProducts);
 router.get("/products_by_group", productsController.getProductsByGroup);
-router.post("/recipe_of_products", productsController.addProductReciep);
+router.post("/recipe_of_products", upload.array('img', 2),  productsController.addProductReciep);
 router.get("/recipe_of_products", productsController.getAllReciep);
 router.get("/all", productsController.getAll);
 router.post(
