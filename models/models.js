@@ -28,7 +28,7 @@ const ProductsGroup = sequelize.define("products_group", {
 
 const Ingredient = sequelize.define("ingredient", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  img: { type: DataTypes.TEXT, allowNull: true },
+  img: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
   price: { type: DataTypes.INTEGER, allowNull: true },
 });
@@ -39,7 +39,7 @@ const Product = sequelize.define("product", {
   price: { type: DataTypes.INTEGER, allowNull: false },
   discount: { type: DataTypes.INTEGER, allowNull: true },
   about: { type: DataTypes.STRING, allowNull: true },
-  img: { type: DataTypes.TEXT, allowNull: true },
+  img: { type: DataTypes.ARRAY(DataTypes.TEXT), allowNull: true },
 });
 
 const Order = sequelize.define("order", {
@@ -52,7 +52,7 @@ const Order = sequelize.define("order", {
   totalCount: { type: DataTypes.INTEGER, allowNull: false },
   orderStatus: { type: DataTypes.STRING, allowNull: true },
   payedStatus: { type: DataTypes.STRING, allowNull: true },
-  orderedProducts: { type: DataTypes.TEXT, allowNull: false },
+  orderedProducts: { type: DataTypes.JSON, allowNull: false },
   deliveryMode: { type: DataTypes.BOOLEAN },
   street: { type: DataTypes.STRING, allowNull: true },
   house: { type: DataTypes.STRING, allowNull: true },
@@ -128,5 +128,5 @@ module.exports = {
   Ingredient,
   Order,
   Product_Ingregient,
-  Restaurant,
+  Restaurant
 };

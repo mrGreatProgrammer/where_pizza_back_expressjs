@@ -63,6 +63,21 @@ class UserController {
     });
   }
 
+  // async refreshToken(req, res, next) {
+
+    
+  //   const token = generateJwt(user.id, user.fullName, user.tel, user.role);
+  //   return res.status(200).json({
+  //     token,
+  //     user: {
+  //       id: user.id,
+  //       fullName: user.fullName,
+  //       tel: user.tel,
+  //       role: user.role,
+  //     },
+  //   });
+  // }
+
   async check(req, res, next) {
     const user = {
       id: req.user.id,

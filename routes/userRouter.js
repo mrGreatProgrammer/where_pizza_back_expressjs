@@ -8,7 +8,9 @@ router.post("/registration", userController.registration);
 router.post("/login", userController.login);
 router.get("/auth", authMiddleware, userController.check); 
 router.patch('/profile', authMiddleware, userController.editMySelf);
-router.get('/all', userController.getAll)
+router.get('/all', userController.getAll);
+// router.get("/refresh_token", userController.refreshToken);
+
 // router.get("/me", authMiddleware, userController.aboutMe); 
 
 module.exports = router;
