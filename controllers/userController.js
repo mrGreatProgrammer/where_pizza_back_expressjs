@@ -9,7 +9,7 @@ const generateJwt = (id, fullName, tel, role) => {
   });
 };
 const generateRefreshJwt = (id) => {
-  return jwt.sign({ id }, process.env.SECRET_KEY, {
+  return jwt.sign({ id }, process.env.SECRET_KEY_FOR_RESFRESH, {
     expiresIn: "32h",
   });
 };
