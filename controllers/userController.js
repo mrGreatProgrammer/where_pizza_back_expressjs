@@ -8,6 +8,11 @@ const generateJwt = (id, fullName, tel, role) => {
     expiresIn: "24h",
   });
 };
+const generateRefreshJwt = (id) => {
+  return jwt.sign({ id }, process.env.SECRET_KEY, {
+    expiresIn: "32h",
+  });
+};
 
 class UserController {
   async registration(req, res, next) {
@@ -30,8 +35,10 @@ class UserController {
     });
     const basket = await Basket.create({ userId: user.id });
     const token = generateJwt(user.id, user.fullName, user.tel, user.role);
+    const refresh_token = generateRefreshJwt(user.id);
     return res.status(200).json({
       token,
+      refresh_token,
       user: {
         id: user.id,
         fullName: user.fullName,
@@ -52,8 +59,10 @@ class UserController {
       return next(ApiError.forbidden("Указан неверный пароль", res));
     }
     const token = generateJwt(user.id, user.fullName, user.tel, user.role);
+    const refresh_token = generateRefreshJwt(user.id);
     return res.status(200).json({
       token,
+      refresh_token,
       user: {
         id: user.id,
         fullName: user.fullName,
@@ -63,20 +72,29 @@ class UserController {
     });
   }
 
-  // async refreshToken(req, res, next) {
+  async refreshToken(req, res, next) {
+    try {
+      const oldRefreshToken = req.headers.refresh_token.split(" ")[1]; // Bearer
 
-    
-  //   const token = generateJwt(user.id, user.fullName, user.tel, user.role);
-  //   return res.status(200).json({
-  //     token,
-  //     user: {
-  //       id: user.id,
-  //       fullName: user.fullName,
-  //       tel: user.tel,
-  //       role: user.role,
-  //     },
-  //   });
-  // }
+      let decoded = jwt.verify(oldRefreshToken, process.env.SECRET_KEY);
+
+      const user = await User.findOne({ where: { id: decoded.id } });
+
+      const token = generateJwt(user.id, user.fullName, user.tel, user.role);
+      const refresh_token = generateRefreshJwt(user.id);
+      console.log(
+        "req----->",
+        req.headers.refresh_token,
+        "************\n*******\n*****"
+      );
+      return res.status(200).json({
+        refresh_token,
+        token,
+      });
+    } catch (error) {
+      res.status(403).json({ message: "Не верно" });
+    }
+  }
 
   async check(req, res, next) {
     const user = {
@@ -95,7 +113,7 @@ class UserController {
         { fullName, tel, email, birthDate, address },
         // req.body,
         { where: { id: req.user.id } }
-        )
+      )
         .then((result) => {
           console.log(result);
         })
@@ -103,18 +121,21 @@ class UserController {
           console.log("!!!!!!\n!!!!\n", err, "\n&&&&&&\n&&&&&&&&");
           res.status(500).json({ message: "Server error" });
         });
-        const user = await User.findOne({where: {id: req.user.id}})
-        // return res.status(200).json(user);
-        return res.status(200).json({ message: "ok", user: {
+      const user = await User.findOne({ where: { id: req.user.id } });
+      // return res.status(200).json(user);
+      return res.status(200).json({
+        message: "ok",
+        user: {
           id: user.id,
           fullName: user.fullName,
           role: user.role,
           tel: user.tel,
           address: user.address,
           email: user.email,
-          birthDate: user.birthDate
-        } });
-      } catch (error) {
+          birthDate: user.birthDate,
+        },
+      });
+    } catch (error) {
       console.log(
         "++++++++++++\n========\n========\n======\n",
         error,
@@ -130,10 +151,10 @@ class UserController {
     limit = limit || 8;
     let offset = page * limit - limit;
     try {
-        let users = await User.findAndCountAll({
-          limit,
-          offset,
-        });
+      let users = await User.findAndCountAll({
+        limit,
+        offset,
+      });
       return res.status(200).json(users);
     } catch (error) {
       console.log("get all users err:---->", error);
